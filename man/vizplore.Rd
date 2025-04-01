@@ -16,6 +16,6 @@
     \item \code{\link{nn_viz}}: Neural network-based dimensionality reduction and visualization.
   }
 }
-\author{Your Name}
-\maintainer{Your Name <your.email@example.com>}
+\author{R. Hatalova}
+\maintainer{R. Hatalova <radoslava.hatalova at g.fmph.uniba.sk>}
 \license{GPL-3}

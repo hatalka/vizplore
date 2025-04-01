@@ -2,8 +2,8 @@ Package: vizplore
 Type: Package
 Title: Visualization of High-Dimensional Data Using Dimensionality Reduction
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
+Author: R. Hatalova
+Maintainer: R. Hatalova <radoslava.hatalova at g.fmph.uniba.sk>
 Description: This package provides functions for dimensionality reduction and visualization of high-dimensional data.
 License: GPL-3
 Encoding: UTF-8
