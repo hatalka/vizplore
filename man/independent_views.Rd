@@ -11,6 +11,8 @@ independent_views(X, y, dim = 2, method = "all", center.scale = TRUE)
 
 \item{y}{A vector of length n representing the categories or labels corresponding to the input data.}
 
+\item{dim}{Integer indicating the desired dimensionality of the visualization: 2 for 2D, 3 for 3D. Default is 2.}
+
 \item{method}{A character string specifying the reduction method to use ("pca", "nn", "catcca").}
 
 \item{center.scale}{A logical (boolean) value indicating whether the data should be centered and scaled before processing.}

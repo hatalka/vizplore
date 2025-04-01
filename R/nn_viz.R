@@ -134,6 +134,9 @@ nn_viz <- function(X, y, dim = 2, center.scale = TRUE) {
   # One-hot encoded matrix
   y_categorical <- to_categorical(y_numeric)
 
+  # Suppress TensorFlow oneDNN warnings
+  options(warn = -1)
+
   # Simple neural network model with a linear dimensionality reduction layer
   inputs <- layer_input(shape = c(ncol(X)))
   outputs <- inputs %>%

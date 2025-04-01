@@ -4,6 +4,7 @@
 #'
 #' @param X A matrix (n x m) representing the input features, where n is the number of samples and m is the number of features.
 #' @param y A vector of length n representing the categories or labels corresponding to the input data.
+#' @param dim Integer indicating the desired dimensionality of the visualization: 2 for 2D, 3 for 3D. Default is 2.
 #' @param method A character string specifying the reduction method to use ("pca", "nn", "catcca").
 #' @param center.scale A logical (boolean) value indicating whether the data should be centered and scaled before processing.
 #'
@@ -14,6 +15,7 @@
 #' independent_views(X, y, method = "pca")
 #' @export
 #' @import plotly
+#' @importFrom stats cov rnorm sd
 
 #' @export
 independent_views <- function(X, y, dim = 2, method = "all", center.scale = TRUE) {
@@ -149,7 +151,7 @@ independent_views <- function(X, y, dim = 2, method = "all", center.scale = TRUE
   plots[[2]] <- plot2
 
   # Final layout with two independent 3D scenes
-  #options(warn = -1)
+  options(warn = -1)
   final_plot <- if (dim == 3)  {subplot(plots, nrows = 1, margin = 0.05,
                                         shareX = FALSE, shareY = FALSE,
                                         titleX = TRUE, titleY = TRUE  ) %>%
