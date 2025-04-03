@@ -27,6 +27,9 @@
 #' @export
 #' @importFrom plotly plot_ly layout
 #' @import Rtsne
+#'
+#' @note This function uses the `Rtsne` function from the `Rtsne` package for dimensionality
+#' reduction. The `Rtsne` package was developed by and is maintained by others.
 
 #' @export
 tsne_viz <- function(X, y, dim = 2, center.scale = TRUE) {

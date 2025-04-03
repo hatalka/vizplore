@@ -28,6 +28,10 @@ with points colored by their categories is displayed.
 Creates a 2D visualization of multidimensional data using
 t-distributed Stochastic Neighbor Embedding.
 }
+\note{
+This function uses the `Rtsne` function from the `Rtsne` package for dimensionality
+reduction. The `Rtsne` package was developed by and is maintained by others.
+}
 \examples{
 data(iris)
 iris <- unique(iris)
