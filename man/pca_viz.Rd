@@ -26,14 +26,9 @@ Additionally, a plotly object representing the PCA visualization is displayed.
 Creates a 2D or 3D visualization of multidimensional data using Principal Component Analysis (PCA).
 }
 \examples{
-# Example feature matrix
-V1 <- rnorm(100, mean = 5, sd = 2)        # Normally distributed feature
-V2 <- V1 + rnorm(100)                     # Correlated with V1
-V3 <- runif(100, min = 0, max = 10)       # Independent feature
-V4 <- V1 * 0.5 + V3 * 0.5 + rnorm(100)    # Combination of V1 and V3
-# Combine into a numeric matrix
-X <- cbind(V1, V2, V3, V4)
-y <- sample(1:4, 100, replace = TRUE)     # Example category vector
-pca_viz(X, y)                             # Default 2D visualization
-pca_viz(X, y, dim = 3)                    # 3D visualization
+data(iris)
+X <- iris[,-5]
+y <- iris[,5]
+pca_viz(X, y)          # Default 2D visualization
+pca_viz(X, y, dim = 3) # 3D visualization
 }

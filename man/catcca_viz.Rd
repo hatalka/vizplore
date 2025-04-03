@@ -31,8 +31,10 @@ Creates a 2D visualization of multidimensional data using
 categorical canonical correlation analysis.
 }
 \examples{
-X <- matrix(rnorm(100 * 6), nrow = 100)  # Example feature matrix
-y <- sample(1:3, 100, replace = TRUE)    # Example category vector
-catcca_viz(X, y)                         # Default 2D visualization
-catcca_viz(X, y, dim = 3)                # 3D visualization
+data(iris)
+X <- iris[,-5]
+y <- iris[,5]
+catcca_viz(X, y)          # Default 2D visualization
+catcca_viz(X, y, dim = 3) # 3D visualization
+
 }

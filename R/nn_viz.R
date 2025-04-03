@@ -17,12 +17,12 @@
 #' with points colored by their categories is displayed.
 #'
 #' @examples
-#' \dontrun{
-#'   X <- matrix(rnorm(200), nrow = 100, ncol = 2)
-#'   y <- sample(1:3, 100, replace = TRUE)
-#'   nn_viz(X, y)         # 2D visualization
-#'   nn_viz(X, y, dim = 3)  # 3D visualization
-#' }
+#' data(iris)
+#' X <- iris[,-5]
+#' y <- iris[,5]
+#' nn_viz(X, y)          # Default 2D visualization
+#' nn_viz(X, y, dim = 3) # 3D visualization
+#'
 #' @export
 #' @import keras3
 #' @import plotly
@@ -33,6 +33,12 @@ nn_viz <- function(X, y, dim = 2, center.scale = TRUE) {
   # Validate the 'dim' parameter
   if (!dim %in% c(2, 3)) {
     stop("Parameter 'dim' must be either 2 or 3. Provided value: ", dim)
+  }
+
+  X <- as.matrix(X)
+  # Check if the number of columns is sufficient for the requested components
+  if(ncol(X) <= dim) {
+    stop("The number of columns in X is not sufficient for the requested dimension.")
   }
 
   # Predefined color palette
@@ -124,7 +130,7 @@ nn_viz <- function(X, y, dim = 2, center.scale = TRUE) {
   }
 
   # Check if the number of columns is sufficient for the requested components
-  if(ncol(X) < dim) {
+  if(ncol(X) <= dim) {
     stop("The number of columns in X is less than the requested dimension.")
   }
 

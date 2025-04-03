@@ -24,7 +24,11 @@ A grid of plotly subplots representing the independent views.
 Creates 2 independent 2D views of the multidimensional data using the specified dimensionality reduction method, with subsequent views based on orthogonal projections to explore independent aspects of the data.
 }
 \examples{
-X <- matrix(rnorm(100 * 6), nrow = 100)  # Example feature matrix
-y <- sample(1:3, 100, replace = TRUE)    # Example category vector
-independent_views(X, y, method = "pca")
+if (!require("ContaminatedMixt")) {
+     install.packages("ContaminatedMixt")}
+library("ContaminatedMixt")
+data(wine)
+X <- wine[,-1]
+y <- wine[,1]
+independent_views(X, y, method = 'pca')
 }

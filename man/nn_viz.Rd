@@ -29,10 +29,10 @@ Creates a 2D (or 3D) visualization of high-dimensional data using a simple
 neural network.
 }
 \examples{
-\dontrun{
-  X <- matrix(rnorm(200), nrow = 100, ncol = 2)
-  y <- sample(1:3, 100, replace = TRUE)
-  nn_viz(X, y)         # 2D visualization
-  nn_viz(X, y, dim = 3)  # 3D visualization
-}
+data(iris)
+X <- iris[,-5]
+y <- iris[,5]
+nn_viz(X, y)          # Default 2D visualization
+nn_viz(X, y, dim = 3) # 3D visualization
+
 }

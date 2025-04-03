@@ -29,8 +29,11 @@ Creates a 2D visualization of multidimensional data using
 t-distributed Stochastic Neighbor Embedding.
 }
 \examples{
-X <- matrix(rnorm(100 * 6), nrow = 100)  # Example feature matrix
-y <- sample(1:3, 100, replace = TRUE)    # Example category vector
-tsne_viz(X, y)                         # Default 2D visualization
-tsne_viz(X, y, dim = 3)                # 3D visualization
+data(iris)
+iris <- unique(iris)
+X <- iris[,-5]
+y <- iris[,5]
+tsne_viz(X, y)          # Default 2D visualization
+tsne_viz(X, y, dim = 3) # 3D visualization
+
 }

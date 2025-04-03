@@ -14,8 +14,7 @@
     \item \code{\link{tsne_viz}}: t-SNE-based dimensionality reduction and visualization.
     \item \code{\link{catcca_viz}}: Dimensionality reduction and visualization based on Canonical Correlation Analysis for categorical data.
     \item \code{\link{nn_viz}}: Neural network-based dimensionality reduction and visualization.
+    \item \code{\link{independent_views}}: Creates two views of the data using dimensionality reduction and orthogonal projections.
   }
 }
-\author{R. Hatalova}
-\maintainer{R. Hatalova <radoslava.hatalova at g.fmph.uniba.sk>}
-\license{GPL-3}
+\author{Radoslava Hatalova, Radoslav Harman}
