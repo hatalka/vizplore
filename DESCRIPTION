@@ -4,7 +4,7 @@ Title: Visualization of High-Dimensional Data Using Dimensionality Reduction
 Version: 0.1.0
 Author: Radoslava Hatalova, Radoslav Harman
 Maintainer: Radoslava Hatalova <radoslava.hatalova@g.fmph.uniba.sk>
-Description: This package provides functions for dimensionality reduction and visualization of high-dimensional data.
+Description: The ‘vizplore‘ package provides functions for dimensionality reduction and visualization of high-dimensional data using techniques like PCA, t-SNE, Canonical Correlation Analysis for categorical data, and neural networks. It supports 2D and 3D visualizations and is designed to help explore data patterns visually.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
