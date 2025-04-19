@@ -1,12 +1,14 @@
 #' @title Neural Network Dimensionality Reduction Visualization
 #'
-#' @description Creates a 2D (or 3D) visualization of high-dimensional data using a simple
+#' @description Creates a 2D (or 3D) visualization of multidimensional labeled data using a simple
 #' neural network.
 #'
 #' @param X A numeric matrix (n x m) representing the input features, where n is the number of samples and m is the number of features.
 #' @param y A vector of length n representing the categories or labels corresponding to the input data.
 #' @param dim Integer indicating the desired dimensionality of the visualization: 2 for 2D, 3 for 3D. Default is 2.
 #' @param center.scale A logical (boolean) value indicating whether the data should be centered and scaled before processing.
+#' @param asp.equal A logical (boolean) value, relevant only for 2D visualization, indicating whether the aspect ratio on both axes should be the same.
+#' @param views An integer specifying the number of independent views. For 3D visualization, the maximum is 4. Subsequent views are based on orthogonal projections to capture different perspectives of the data.
 #'
 #' @return A list containing:
 #' \describe{
@@ -29,7 +31,7 @@
 #' @importFrom reshape2 melt
 
 #' @export
-nn_viz <- function(X, y, dim = 2, center.scale = TRUE) {
+nn_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views = 1) {
   # Validate the 'dim' parameter
   if (!dim %in% c(2, 3)) {
     stop("Parameter 'dim' must be either 2 or 3. Provided value: ", dim)
@@ -51,69 +53,95 @@ nn_viz <- function(X, y, dim = 2, center.scale = TRUE) {
   }
   colorway <- colorway[1:length(unique_categories)]
 
-  # Call the internal neural network function to perform dimensionality reduction
-  nn_result <- .nn(X, y, dim, center.scale)
-  reduced_data <- nn_result$projected_data
+  views <- as.integer(views)
+  if (!is.integer(views) || views < 1) {
+    stop("Parameter 'views' must be a positive integer. Provided value: ", views)
+  }
+  m <- ncol(X)
 
-  # Prepare data for visualization based on the desired dimension
-  if (dim == 2) {
-    plot_data <- data.frame(
-      Dim1 = reduced_data[, 1],
-      Dim2 = reduced_data[, 2],
-      Category = y_factor
-    )
+  if (dim == 3){
+    views = min(views, 4)
+  }
+  views = min(views, floor(m/dim))
 
-    p <- plot_ly(
-      data = plot_data,
-      x = ~Dim1,
-      y = ~Dim2,
-      color = ~Category,
-      type = 'scatter',
-      mode = 'markers',
-      colors = colorway,
-      marker = list(size = 5, opacity = 0.85)
-    ) %>%
-      layout(
-        title = list(text = "2D Projection Using Neural Network", y = 0.98),
-        xaxis = list(title = "Dimension 1"),
-        yaxis = list(title = "Dimension 2")
-      )
+  if (views == 1){
+    # Call the internal neural network function to perform dimensionality reduction
+    nn_result <- .nn(X, y, dim, center.scale)
+    reduced_data <- nn_result$projected_data
 
-  } else if (dim == 3) {
-    if (ncol(reduced_data) < 3) {
-      stop("Insufficient number of dimensions in reduced data for 3D visualization.")
+    x_ax <- list(title = "Dimension 1")
+    y_ax <- list(title = "Dimension 2")
+
+    if (asp.equal) {
+      # lock y to x with equal scaling
+      y_ax$scaleanchor <- "x"
+      y_ax$scaleratio <- 1
     }
 
-    plot_data <- data.frame(
-      Dim1 = reduced_data[, 1],
-      Dim2 = reduced_data[, 2],
-      Dim3 = reduced_data[, 3],
-      Category = y_factor
-    )
-
-    p <- plot_ly(
-      data = plot_data,
-      x = ~Dim1,
-      y = ~Dim2,
-      z = ~Dim3,
-      color = ~Category,
-      type = 'scatter3d',
-      mode = 'markers',
-      colors = colorway,
-      marker = list(size = 4)
-    ) %>%
-      layout(
-        title = list(text = "3D Projection Using Neural Network", y = 0.98),
-        scene = list(
-          xaxis = list(title = "Dimension 1"),
-          yaxis = list(title = "Dimension 2"),
-          zaxis = list(title = "Dimension 3")
-        )
+    # Prepare data for visualization based on the desired dimension
+    if (dim == 2) {
+      plot_data <- data.frame(
+        Dim1 = reduced_data[, 1],
+        Dim2 = reduced_data[, 2],
+        Category = y_factor
       )
-  }
 
-  # Apply the global Plotly theme and display the plot
-  print(.plotly_theme(p))
+      p <- plot_ly(
+        data = plot_data,
+        x = ~Dim1,
+        y = ~Dim2,
+        color = ~Category,
+        type = 'scatter',
+        mode = 'markers',
+        colors = colorway,
+        marker = list(size = 5, opacity = 0.85)
+      ) %>%
+        layout(
+          title = list(text = "2D Projection Using Neural Network", y = 0.98),
+          xaxis = x_ax,
+          yaxis = y_ax
+        )
+
+    } else if (dim == 3) {
+      if (ncol(reduced_data) < 3) {
+        stop("Insufficient number of dimensions in reduced data for 3D visualization.")
+      }
+
+      plot_data <- data.frame(
+        Dim1 = reduced_data[, 1],
+        Dim2 = reduced_data[, 2],
+        Dim3 = reduced_data[, 3],
+        Category = y_factor
+      )
+
+      p <- plot_ly(
+        data = plot_data,
+        x = ~Dim1,
+        y = ~Dim2,
+        z = ~Dim3,
+        color = ~Category,
+        type = 'scatter3d',
+        mode = 'markers',
+        colors = colorway,
+        marker = list(size = 4)
+      ) %>%
+        layout(
+          title = list(text = "3D Projection Using Neural Network", y = 0.98),
+          scene = list(
+            xaxis = list(title = "Dimension 1"),
+            yaxis = list(title = "Dimension 2"),
+            zaxis = list(title = "Dimension 3")
+          )
+        )
+    }
+
+    # Apply the global Plotly theme and display the plot
+    print(.plotly_theme(p))
+  } else {
+    iv <- .independent_views(X,y, dim, method = 'nn', center.scale, asp.equal, views)
+    projected_data <- iv$projected_data
+    transformation_matrix <- iv$ transformation_matrices
+  }
 
   return(invisible(list(reduced_data = nn_result$reduced_data,
               transformation_matrix = nn_result$transformation_matrix)))

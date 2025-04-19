@@ -75,3 +75,4 @@ my_package_env$palette <- c(
       )
     )
 }
+

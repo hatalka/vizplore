@@ -1,6 +1,6 @@
-#' @title catCCA Visualization
+#' @title cca Visualization
 #'
-#' @description Creates a 2D visualization of multidimensional data using
+#' @description Creates a 2D (or 3D) visualization of multidimensional labeled data using
 #' categorical canonical correlation analysis.
 #'
 #' @param X A matrix representing the input features (quantitative variables).
@@ -8,6 +8,8 @@
 #' @param center A logical value indicating whether to center the quantitative data.
 #' @param dim Integer indicating the desired dimensionality of the visualization: 2 for 2D, 3 for 3D. Default is 2.
 #' @param center.scale A logical (boolean) value indicating whether the data should be centered and scaled before processing.
+#' @param asp.equal A logical (boolean) value, relevant only for 2D visualization, indicating whether the aspect ratio on both axes should be the same.
+#' @param views An integer specifying the number of independent views. For 3D visualization, the maximum is 4. Subsequent views are based on orthogonal projections to capture different perspectives of the data.
 #'
 #' @return A list containing:
 #' \describe{
@@ -21,26 +23,20 @@
 #' data(iris)
 #' X <- iris[,-5]
 #' y <- iris[,5]
-#' catcca_viz(X, y)          # Default 2D visualization
-#' catcca_viz(X, y, dim = 3) # 3D visualization
+#' cca_viz(X, y)          # Default 2D visualization
+#' cca_viz(X, y, dim = 3) # 3D visualization
 #'
 #' @export
 #' @importFrom plotly plot_ly layout
 
 #' @export
-catcca_viz <- function(X, y, dim = 2, center.scale = TRUE) {
+cca_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views = 1) {
   # Validate the 'dim' parameter
   if (!dim %in% c(2, 3)) {
     stop("Parameter 'dim' must be either 2 or 3. Provided value: ", dim)
   }
-  # Perform canonical correlation calculation
-  catcca_result <- .catcca(X, y, dim, center.scale)
-  projected_data <- catcca_result$projected_data
-  transformation_matrix <- catcca_result$transformation_matrix
 
   y_factor <- as.factor(y)
-  # Prepare data for visualization
-  plot_data <- data.frame(Dim1 = Re(projected_data)[, 1], Dim2 = Re(projected_data)[, 2], Category = y_factor)
 
   # Predefined color palette
   colorway <- my_package_env$palette
@@ -52,40 +48,72 @@ catcca_viz <- function(X, y, dim = 2, center.scale = TRUE) {
   }
   colorway <- colorway[1:length(unique_categories)]
 
-  # Create 2D or 3D plot based on the desired dimensionality
-  if (dim == 2) {
-    p <- plot_ly(data = plot_data, x = ~Dim1, y = ~Dim2, color = ~Category, type = 'scatter',
-                 mode = 'markers',
-                 marker = list(size = 5, opacity = 0.85),
-                 colors = colorway[1:length(unique(y_factor))]) %>%
-      layout(title = list(text = '2D Projection Using catCCA', y = 0.98),
-             xaxis = list(title = 'Dimension 1'), yaxis = list(title = 'Dimension 2'))
-  } else if (dim == 3) {
-    # Ensure that we have at least 3 components for 3D visualization
-    if (ncol(projected_data) < 3) {
-      stop("Insufficient number of components for 3D visualization. Please ensure that X has at least 3 columns.")
-    }
-    plot_data$Dim3 <- Re(projected_data)[, 3]
-    p <- plot_ly(data = plot_data, x = ~Dim1, y = ~Dim2, z = ~Dim3, color = ~Category,
-                 type = 'scatter3d', mode = 'markers',
-                 marker = list(size = 4),
-                 colors = colorway[1:length(unique(y))]) %>%
-      layout(title = list(text = '3D Projection Using catCCA', y=0.98),
-             scene = list(xaxis = list(title = 'Dimension 1'),
-                          yaxis = list(title = 'Dimension 2'),
-                          zaxis = list(title = 'Dimension 3')))
-  } else {
-    stop("Parameter 'dim' must be either 2 or 3. Provided value: ", dim)
+  views <- as.integer(views)
+  if (!is.integer(views) || views < 1) {
+    stop("Parameter 'views' must be a positive integer. Provided value: ", views)
   }
+  m <- ncol(X)
 
-  # Apply the global Plotly theme and display the plot
-  print(.plotly_theme(p))
+  if (dim == 3){
+    views = min(views, 4)
+  }
+  views = min(views, floor(m/dim))
 
+  if (views == 1){
+    # Perform canonical correlation calculation
+    cca_result <- .cca(X, y, dim, center.scale)
+    projected_data <- cca_result$projected_data
+    transformation_matrix <- cca_result$transformation_matrix
+
+    # Prepare data for visualization
+    plot_data <- data.frame(Dim1 = Re(projected_data)[, 1], Dim2 = Re(projected_data)[, 2], Category = y_factor)
+
+    x_ax <- list(title = "Dimension 1")
+    y_ax <- list(title = "Dimension 2")
+
+    if (asp.equal) {
+      # lock y to x with equal scaling
+      y_ax$scaleanchor <- "x"
+      y_ax$scaleratio <- 1
+    }
+    # Create 2D or 3D plot based on the desired dimensionality
+    if (dim == 2) {
+      p <- plot_ly(data = plot_data, x = ~Dim1, y = ~Dim2, color = ~Category, type = 'scatter',
+                   mode = 'markers',
+                   marker = list(size = 5, opacity = 0.85),
+                   colors = colorway[1:length(unique(y_factor))]) %>%
+        layout(title = list(text = '2D Projection Using CCA', y = 0.98),
+               xaxis = x_ax, yaxis = y_ax)
+    } else if (dim == 3) {
+      # Ensure that we have at least 3 components for 3D visualization
+      if (ncol(projected_data) < 3) {
+        stop("Insufficient number of components for 3D visualization. Please ensure that X has at least 3 columns.")
+      }
+      plot_data$Dim3 <- Re(projected_data)[, 3]
+      p <- plot_ly(data = plot_data, x = ~Dim1, y = ~Dim2, z = ~Dim3, color = ~Category,
+                   type = 'scatter3d', mode = 'markers',
+                   marker = list(size = 4),
+                   colors = colorway[1:length(unique(y))]) %>%
+        layout(title = list(text = '3D Projection Using CCA', y=0.98),
+               scene = list(xaxis = list(title = 'Dimension 1'),
+                            yaxis = list(title = 'Dimension 2'),
+                            zaxis = list(title = 'Dimension 3')))
+    } else {
+      stop("Parameter 'dim' must be either 2 or 3. Provided value: ", dim)
+    }
+
+    # Apply the global Plotly theme and display the plot
+    print(.plotly_theme(p))
+  } else {
+    iv <- .independent_views(X, y, dim, method = 'cca', center.scale, asp.equal, views)
+    projected_data <- iv$projected_data
+    transformation_matrix <- iv$ transformation_matrices
+  }
   return(invisible(list(projected_data = projected_data, transformation_matrix = Re(transformation_matrix))))
 }
 
 #' @noRd
-.catcca <- function(X, y, dim=2, center.scale = TRUE) {
+.cca <- function(X, y, dim=2, center.scale = TRUE) {
   # Ensure input data are matrices and vectors
   X <- as.matrix(X)  # Quantitative variables
   y <- as.factor(y)    # Categorical variable
