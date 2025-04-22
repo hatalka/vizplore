@@ -2,7 +2,7 @@
 % Please edit documentation in R/cca_viz.R
 \name{cca_viz}
 \alias{cca_viz}
-\title{cca Visualization}
+\title{CCA Visualization}
 \usage{
 cca_viz(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views = 1)
 }

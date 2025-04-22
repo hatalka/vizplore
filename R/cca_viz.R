@@ -1,4 +1,4 @@
-#' @title cca Visualization
+#' @title CCA Visualization
 #'
 #' @description Creates a 2D (or 3D) visualization of multidimensional labeled data using
 #' categorical canonical correlation analysis.
