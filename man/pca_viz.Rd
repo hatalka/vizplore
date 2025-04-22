@@ -4,7 +4,7 @@
 \alias{pca_viz}
 \title{PCA Visualization}
 \usage{
-pca_viz(X, y, dim = 2, center.scale = TRUE)
+pca_viz(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views = 1)
 }
 \arguments{
 \item{X}{A matrix representing the input features (quantitative variables).}
@@ -14,6 +14,10 @@ pca_viz(X, y, dim = 2, center.scale = TRUE)
 \item{dim}{Integer indicating the desired dimensionality of the visualization: 2 for 2D, 3 for 3D. Default is 2.}
 
 \item{center.scale}{A logical (boolean) value indicating whether the data should be centered and scaled before processing.}
+
+\item{asp.equal}{A logical (boolean) value, relevant only for 2D visualization, indicating whether the aspect ratio on both axes should be the same.}
+
+\item{views}{An integer specifying the number of independent views. For 3D visualization, the maximum is 4. Subsequent views are based on orthogonal projections to capture different perspectives of the data.}
 }
 \value{
 \describe{
@@ -23,12 +27,12 @@ pca_viz(X, y, dim = 2, center.scale = TRUE)
 Additionally, a plotly object representing the PCA visualization is displayed.
 }
 \description{
-Creates a 2D or 3D visualization of multidimensional data using Principal Component Analysis (PCA).
+Creates a 2D (or 3D) visualization of multidimensional labeled data using Principal Component Analysis (PCA).
 }
 \examples{
 data(iris)
 X <- iris[,-5]
 y <- iris[,5]
-pca_viz(X, y)          # Default 2D visualization
+pca_viz(X, y, views = 2)     # 2D visualization
 pca_viz(X, y, dim = 3) # 3D visualization
 }

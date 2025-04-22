@@ -4,7 +4,7 @@
 \alias{cca_viz}
 \title{cca Visualization}
 \usage{
-cca_viz(X, y, dim = 2, center.scale = TRUE)
+cca_viz(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views = 1)
 }
 \arguments{
 \item{X}{A matrix representing the input features (quantitative variables).}
@@ -14,6 +14,10 @@ cca_viz(X, y, dim = 2, center.scale = TRUE)
 \item{dim}{Integer indicating the desired dimensionality of the visualization: 2 for 2D, 3 for 3D. Default is 2.}
 
 \item{center.scale}{A logical (boolean) value indicating whether the data should be centered and scaled before processing.}
+
+\item{asp.equal}{A logical (boolean) value, relevant only for 2D visualization, indicating whether the aspect ratio on both axes should be the same.}
+
+\item{views}{An integer specifying the number of independent views. For 3D visualization, the maximum is 4. Subsequent views are based on orthogonal projections to capture different perspectives of the data.}
 
 \item{center}{A logical value indicating whether to center the quantitative data.}
 }
@@ -27,7 +31,7 @@ Additionally, a Plotly plot representing the data points in the reduced feature 
 with points colored by their categories is displayed.
 }
 \description{
-Creates a 2D visualization of multidimensional data using
+Creates a 2D (or 3D) visualization of multidimensional labeled data using
 categorical canonical correlation analysis.
 }
 \examples{
