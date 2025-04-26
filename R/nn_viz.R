@@ -67,7 +67,7 @@ nn_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views =
   if (views == 1){
     # Call the internal neural network function to perform dimensionality reduction
     nn_result <- .nn(X, y, dim, center.scale)
-    reduced_data <- nn_result$projected_data
+    projected_data <- nn_result$projected_data
 
     x_ax <- list(title = "Dimension 1")
     y_ax <- list(title = "Dimension 2")
@@ -81,8 +81,8 @@ nn_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views =
     # Prepare data for visualization based on the desired dimension
     if (dim == 2) {
       plot_data <- data.frame(
-        Dim1 = reduced_data[, 1],
-        Dim2 = reduced_data[, 2],
+        Dim1 = projected_data[, 1],
+        Dim2 = projected_data[, 2],
         Category = y_factor
       )
 
@@ -103,14 +103,14 @@ nn_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views =
         )
 
     } else if (dim == 3) {
-      if (ncol(reduced_data) < 3) {
+      if (ncol(projected_data) < 3) {
         stop("Insufficient number of dimensions in reduced data for 3D visualization.")
       }
 
       plot_data <- data.frame(
-        Dim1 = reduced_data[, 1],
-        Dim2 = reduced_data[, 2],
-        Dim3 = reduced_data[, 3],
+        Dim1 = projected_data[, 1],
+        Dim2 = projected_data[, 2],
+        Dim3 = projected_data[, 3],
         Category = y_factor
       )
 
@@ -143,8 +143,8 @@ nn_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views =
     transformation_matrix <- iv$ transformation_matrices
   }
 
-  return(invisible(list(reduced_data = nn_result$reduced_data,
-              transformation_matrix = nn_result$transformation_matrix)))
+  return(invisible(list(projected_data = projected_data,
+              transformation_matrix = transformation_matrix)))
 }
 
 #' @noRd

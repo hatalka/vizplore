@@ -63,7 +63,7 @@ cca_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views 
     # Perform canonical correlation calculation
     cca_result <- .cca(X, y, dim, center.scale)
     projected_data <- cca_result$projected_data
-    transformation_matrix <- cca_result$transformation_matrix
+    transformation_matrix <- Re(cca_result$transformation_matrix)
 
     # Prepare data for visualization
     plot_data <- data.frame(Dim1 = Re(projected_data)[, 1], Dim2 = Re(projected_data)[, 2], Category = y_factor)
@@ -107,9 +107,9 @@ cca_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views 
   } else {
     iv <- .independent_views(X, y, dim, method = 'cca', center.scale, asp.equal, views)
     projected_data <- iv$projected_data
-    transformation_matrix <- iv$ transformation_matrices
+    transformation_matrix <- iv$transformation_matrices
   }
-  return(invisible(list(projected_data = projected_data, transformation_matrix = Re(transformation_matrix))))
+  return(invisible(list(projected_data = projected_data, transformation_matrix = transformation_matrix)))
 }
 
 #' @noRd
@@ -156,7 +156,6 @@ cca_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views 
 
   # Select the top 'dim' eigenvectors based on the eigenvalues
   transformation_matrix <- eigen_vectors[, order(eigen_values, decreasing = TRUE)[1:dim]]
-
   # Find orthogonal basis in reduced space
   orthogonalization <- .orth(X, transformation_matrix, dim)
   # Projected data in lower dimension

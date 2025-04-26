@@ -25,8 +25,8 @@
   }
   colorway <- colorway[1:length(unique_categories)]
 
-  x_ax <- list(title = "Dimension 1")
-  y_ax <- list(title = "Dimension 2")
+  x_ax <- list(title = list(text="Dimension 1",standoff = 1L))
+  y_ax <- list(title = list(text="Dimension 2",standoff = 1L))
 
   if (asp.equal) {
     # lock y to x with equal scaling
@@ -43,7 +43,7 @@
       stop(paste("Not enough dimensions in X. PCA requires at least", num_components_needed, "features for", dim, "D visualization."))
     }
     # First view: Use pca to get PC1 and PC2
-    pca_result <- .pca(X, dim, center.scale)
+    pca_result <- .pca(X, dim)
     projected_data <- pca_result$projected_data
     transformation_matrix <- pca_result$transformation_matrix
   } else if(method == "cca"){
@@ -113,14 +113,17 @@
   num_cols <- floor(sqrt(views))
 
   for (view_num in 2:views) {
+    x_ax <- list(title = list(text=paste("Dimension ",(view_num*2-1)),standoff = 1L))
+    y_ax <- list(title = list(text=paste("Dimension ",(view_num*2)),standoff = 1L))
     m <- nrow(transformation_matrix)  # Length of each vector
     # Generate (m-2) vectors of length m from N(0,1)
-    #set.seed(123)
+    set.seed(123)
     random_matrix <- matrix(rnorm((m-dim) * m), nrow = m, ncol = (m-dim))
-    #set.seed(NULL)
+    set.seed(NULL)
     P <- cbind(transformation_matrix, random_matrix)
     Q2 <- .orth(X, P, dim)$Q2
     independent_data <- X %*% Q2
+    X <- independent_data
 
     if (method == "pca") {
       # Compute PCA again on independent data
@@ -131,7 +134,7 @@
       # Compute cca again on independent data
       cca_result_orth <- .cca(independent_data, y, dim, center.scale)
       projected_data_orth <- Re(cca_result_orth$projected_data)
-      transformation_matrix <- cca_result_orth$transformation_matrix
+      transformation_matrix <- Re(cca_result_orth$transformation_matrix)
     } else if(method == "nn"){
       # Compute nn again on independent data
       nn_result_orth <- .nn(independent_data, y, dim, center.scale)
@@ -201,49 +204,49 @@
                                 showbackground=TRUE,
                                 backgroundcolor='rgb(240, 240,240)'),
                     domain=list(x=c(0,0.5),y=y_scene)),
-        scene2 = list(xaxis=list(title = "Dimension 1",
+        scene2 = list(xaxis=list(title = "Dimension 4",
                                  gridcolor='white',
                                  zerolinecolor='white',
                                  showbackground=TRUE,
                                  backgroundcolor='rgb(240, 240,240)'),
-                      yaxis=list(title = "Dimension 2",
+                      yaxis=list(title = "Dimension 5",
                                  gridcolor='white',
                                  zerolinecolor='white',
                                  showbackground=TRUE,
                                  backgroundcolor='rgb(240, 240,240)'),
-                      zaxis=list(title = "Dimension 3",
+                      zaxis=list(title = "Dimension 6",
                                  gridcolor='white',
                                  zerolinecolor='white',
                                  showbackground=TRUE,
                                  backgroundcolor='rgb(240, 240,240)'),
                       domain=list(x=c(0.5,1),y=y_scene)),
-        scene3 = list(xaxis=list(title = "Dimension 1",
+        scene3 = list(xaxis=list(title = "Dimension 7",
                                  gridcolor='white',
                                  zerolinecolor='white',
                                  showbackground=TRUE,
                                  backgroundcolor='rgb(240, 240,240)'),
-                      yaxis=list(title = "Dimension 2",
+                      yaxis=list(title = "Dimension 8",
                                  gridcolor='white',
                                  zerolinecolor='white',
                                  showbackground=TRUE,
                                  backgroundcolor='rgb(240, 240,240)'),
-                      zaxis=list(title = "Dimension 3",
+                      zaxis=list(title = "Dimension 9",
                                  gridcolor='white',
                                  zerolinecolor='white',
                                  showbackground=TRUE,
                                  backgroundcolor='rgb(240, 240,240)'),
                       domain=list(x=c(0,0.5),y=c(0, 0.5))),
-        scene4 = list(xaxis=list(title = "Dimension 1",
+        scene4 = list(xaxis=list(title = "Dimension 10",
                                  gridcolor='white',
                                  zerolinecolor='white',
                                  showbackground=TRUE,
                                  backgroundcolor='rgb(240, 240,240)'),
-                      yaxis=list(title = "Dimension 2",
+                      yaxis=list(title = "Dimension 11",
                                  gridcolor='white',
                                  zerolinecolor='white',
                                  showbackground=TRUE,
                                  backgroundcolor='rgb(240, 240,240)'),
-                      zaxis=list(title = "Dimension 3",
+                      zaxis=list(title = "Dimension 12",
                                  gridcolor='white',
                                  zerolinecolor='white',
                                  showbackground=TRUE,
@@ -252,7 +255,7 @@
   } else{
   final_plot <-
     subplot(plots, nrows = num_rows, margin = 0.05,
-            shareX = TRUE, shareY = TRUE,
+            shareX = FALSE, shareY = FALSE,
             titleX = TRUE, titleY=TRUE) %>%
     layout(
       title = list(text = title, y = 0.98))

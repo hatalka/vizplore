@@ -55,6 +55,12 @@ pca_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views 
   if (!is.integer(views) || views < 1) {
     stop("Parameter 'views' must be a positive integer. Provided value: ", views)
   }
+
+  if(center.scale == TRUE){
+    # Standardizing the data (mean = 0, standard deviation = 1)
+    X <- .center.and.scale(X)
+  }
+
   m <- ncol(X)
 
   if (dim == 3){
@@ -64,7 +70,7 @@ pca_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views 
 
   if (views == 1){
     # Perform PCA using the internal function
-    pca_result <- .pca(X, dim, center.scale)
+    pca_result <- .pca(X, dim)
     projected_data <- pca_result$projected_data
     transformation_matrix <- pca_result$transformation_matrix
 
