@@ -9,7 +9,7 @@
 #' @param dim Integer indicating the desired dimensionality of the visualization: 2 for 2D, 3 for 3D. Default is 2.
 #' @param center.scale A logical (boolean) value indicating whether the data should be centered and scaled before processing.
 #' @param asp.equal A logical (boolean) value, relevant only for 2D visualization, indicating whether the aspect ratio on both axes should be the same.
-#' @param views An integer specifying the number of independent views. For 3D visualization, the maximum is 4. Subsequent views are based on orthogonal projections to capture different perspectives of the data.
+#' @param views An integer specifying the number of complementary projections. For 3D visualization, the maximum is 4. Subsequent views are based on orthogonal projections to capture different perspectives of the data.
 #'
 #' @return A list containing:
 #' \describe{

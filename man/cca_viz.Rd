@@ -17,7 +17,7 @@ cca_viz(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views = 1)
 
 \item{asp.equal}{A logical (boolean) value, relevant only for 2D visualization, indicating whether the aspect ratio on both axes should be the same.}
 
-\item{views}{An integer specifying the number of independent views. For 3D visualization, the maximum is 4. Subsequent views are based on orthogonal projections to capture different perspectives of the data.}
+\item{views}{An integer specifying the number of complementary projections. For 3D visualization, the maximum is 4. Subsequent views are based on orthogonal projections to capture different perspectives of the data.}
 
 \item{center}{A logical value indicating whether to center the quantitative data.}
 }

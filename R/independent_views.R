@@ -65,9 +65,9 @@
   projected_data_list[[1]] <- projected_data
 
   title <- switch(method,
-                  'pca' = 'PCA Independent Views',
-                  'cca' = 'CCA Independent Views',
-                  'nn' = 'Neural Network Independent Views'
+                  'pca' = 'PCA Complementary Projections',
+                  'cca' = 'CCA Complementary Projections',
+                  'nn' = 'Neural Network Complementary Projections'
   )
 
   # Extract first dim components
@@ -117,9 +117,9 @@
     y_ax <- list(title = list(text=paste("Dimension ",(view_num*2)),standoff = 1L))
     m <- nrow(transformation_matrix)  # Length of each vector
     # Generate (m-2) vectors of length m from N(0,1)
-    set.seed(123)
+    #set.seed(123)
     random_matrix <- matrix(rnorm((m-dim) * m), nrow = m, ncol = (m-dim))
-    set.seed(NULL)
+    #set.seed(NULL)
     P <- cbind(transformation_matrix, random_matrix)
     Q2 <- .orth(X, P, dim)$Q2
     independent_data <- X %*% Q2

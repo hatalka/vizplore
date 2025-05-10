@@ -8,7 +8,7 @@
 #' @param dim Integer indicating the desired dimensionality of the visualization: 2 for 2D, 3 for 3D. Default is 2.
 #' @param center.scale A logical (boolean) value indicating whether the data should be centered and scaled before processing.
 #' @param asp.equal A logical (boolean) value, relevant only for 2D visualization, indicating whether the aspect ratio on both axes should be the same.
-#' @param views An integer specifying the number of independent views. For 3D visualization, the maximum is 4. Subsequent views are based on orthogonal projections to capture different perspectives of the data.
+#' @param views An integer specifying the number of complementary projections. For 3D visualization, the maximum is 4. Subsequent views are based on orthogonal projections to capture different perspectives of the data.
 #'
 #' @return A list containing:
 #' \describe{
@@ -68,6 +68,7 @@ nn_viz <- function(X, y, dim = 2, center.scale = TRUE, asp.equal = TRUE, views =
     # Call the internal neural network function to perform dimensionality reduction
     nn_result <- .nn(X, y, dim, center.scale)
     projected_data <- nn_result$projected_data
+    transformation_matrix <- nn_result$transformation_matrix
 
     x_ax <- list(title = "Dimension 1")
     y_ax <- list(title = "Dimension 2")
